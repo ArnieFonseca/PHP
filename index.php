@@ -1,54 +1,37 @@
-<!DOCTYPE html>
-<html>
+<?php
 
-<head>
+// Path to the front controller (this file)
+define('FCPATH', __DIR__ . DIRECTORY_SEPARATOR);
 
-    <title>Callback Demo</title>
+/*
+ *---------------------------------------------------------------
+ * BOOTSTRAP THE APPLICATION
+ *---------------------------------------------------------------
+ * This process sets up the path constants, loads and registers
+ * our autoloader, along with Composer's, loads our constants
+ * and fires up an environment-specific bootstrapping.
+ */
 
-    <link rel="stylesheet" href="static/css/site.css">
+// Ensure the current directory is pointing to the front controller's directory
+chdir(__DIR__);
 
-</head>
+// Load our paths config file
+// This is the line that might need to be changed, depending on your folder structure.
+$pathsConfig = FCPATH . '/app/Config/Paths.php';
+// ^^^ Change this if you move your application folder
+require realpath($pathsConfig) ?: $pathsConfig;
 
-<body>
+$paths = new Config\Paths();
 
-    <header>
-        <h1>JavaScript Callbacks</h1>
+// Location of the framework bootstrap file.
+$bootstrap = rtrim($paths->systemDirectory, '\\/ ') . DIRECTORY_SEPARATOR . 'bootstrap.php';
+$app       = require realpath($bootstrap) ?: $bootstrap;
 
-        <h3>Calculation Asynchronized.</h3>
-    </header>
-
-    <main>
-        <p id="result">Press button to calculate the addition</p>
-
-        <table>
-            <tr>
-                <td class="literals"><label> First:</label></td>
-                <td><input id="first" type="text" maxlength="5" placeholder="Enter a number" /></td>
-            </tr>
-            <tr>
-                <td class="literals"><label>Second:</label></td>
-                <td><input id="second" type="text" maxlength="5" placeholder="Enter a number" /></td>
-            </tr>
-        </table>
-
-        <!-- Dropdown option for the calculation -->
-        <select id="cboOperation"></select>
-    
-        <!-- Button and image for the asynchronized call -->
-        <button id="btn">Calculate</button>
-        <img id="imgLoader" src="static/images/circles-menu-1.gif">
-
-    </main>
-
-    <footer>
-
-        <hr>
-        <h6>JavaScript Calculator</h6>
-        <script src='static/js/callback-constant.js'></script>
-        <script src='static/js/callback.js'></script>
-
-    </footer>
-
-</body>
-
-</html>
+/*
+ *---------------------------------------------------------------
+ * LAUNCH THE APPLICATION
+ *---------------------------------------------------------------
+ * Now that everything is setup, it's time to actually fire
+ * up the engines and make this app do its task.
+ */
+$app->run();
